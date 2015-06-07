@@ -76,10 +76,10 @@ exports.update = function(req, res){
 	req.quiz.respuesta  = req.body.quiz.respuesta;
 	req.quiz.tema       = req.body.quiz.tema;
 	
-	var errors = req.quiz.validate();//ya qe el objeto errors no tiene then(
+	var errors = req.quiz.validate();//ya qe el objeto errors no tiene then( y aparece error al invocarlo
 	if (errors)
 	{
-		var i=0; var errores=new Array();//se convierte en [] con la propiedad message por compatibilida con layout
+		var i=0; var errores=new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
 		for (var prop in errors) errores[i++]={message: errors[prop]};		
 		res.render('quizes/edit', {quiz: req.quiz, errors: errores});
 	} else {
