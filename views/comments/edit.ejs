@@ -2,5 +2,5 @@ Editar comentario: <p>
 
 <form method="post" action="/quizes/<%= quizid %>/comments/<%= posicion %>?_method=put" >
 	<input type="text" id="comment" name="comment[texto]" value="<%= taedit %>" /> <p>
-	<button type="submit">Enviar</button>
+	<button type="submit">Enviar</button><a href="/quizes"><button type="button">Cancelar</button></a>
 </form>
