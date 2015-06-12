@@ -8,5 +8,5 @@
 
 <p><strong>Comentarios:</strong></p>
 <% for(index in quiz.comments) { %>
-	<p>-<%= +index+1 %>- <%= quiz.comments[index].texto %></p>
+	<p>-<%= +index+1 %>- <%= quiz.comments[index].texto %> -<%= quiz.comments[index].id %>-<a href="/quizes/<%= quiz.id %>/comments/edit/<%= index %>"><button>editar</button></a></p>
 <% } %>
