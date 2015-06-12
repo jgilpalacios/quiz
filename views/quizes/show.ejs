@@ -6,7 +6,21 @@
 
 <p><a href="/quizes/<%= quiz.id %>/comments/new"><button> Nuevo comentario</button></a></p>
 
-<p><strong>Comentarios:</strong></p>
+<table>
+
+<tr><td><strong>Comentarios:</strong></td><td></td><td></td></tr>
+
 <% for(index in quiz.comments) { %>
-	<p>-<%= +index+1 %>- <%= quiz.comments[index].texto %> -<%= quiz.comments[index].id %>-<a href="/quizes/<%= quiz.id %>/comments/edit/<%= index %>"><button>editar</button></a></p>
+   <tr>
+	<td align="left">-<%= +index+1 %>- <%= quiz.comments[index].texto %></td>
+	<td><a href="/quizes/<%= quiz.id %>/comments/edit/<%= index %>"><button>editar</button></a></td>
+	<td>
+      	  <form method="post" action="/quizes/<%= quiz.id %>/comments/<%= index %>?_method=delete">
+       	    <button type="submit" onClick="return confirm('Borrar: <%= quiz.comments[index].texto %>');">
+          	borrar
+            </button>
+     	  </form>
+	</td>
+   </tr>
 <% } %>
+</table>

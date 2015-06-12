@@ -38,24 +38,30 @@ exports.edit = function(req, res){
 // PUT /quizes/:id/comments/:posicion(\\d+)
 exports.update = function(req, res){
 	var comment=req.quiz.comments[+req.params.posicion];
-	/*var comment = models.Comment.build( 
-		{ texto: req.body.comment.texto,
-		  QuizId: req.params.quizId } 
-	);*/
-	comment.texto = req.body.comment.texto;
-	//req.quiz.comments[+req.params.posicion].texto   = req.body.comment.texto;
-	//req.quiz.respuesta  = req.body.quiz.respuesta;
-	//req.quiz.tema       = req.body.quiz.tema;
 	
-	var errors = req.quiz.validate();//ya qe el objeto errors no tiene then( y aparece error al invocarlo
+	comment.texto = req.body.comment.texto;
+	
+	var errors = comment.validate();//ya qe el objeto errors no tiene then( y aparece error al invocarlo
 	if (errors)
 	{
 		var i=0; var errores=new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
 		for (var prop in errors) errores[i++]={message: errors[prop]};		
-		res.render('comments/edit.ejs', {comment: comment, quizid: req.params.quizId, errors: errores});
+		res.render('comments/edit.ejs', {comment: comment,
+						 quizid: req.params.quizId,
+						 taedit: comment.texto,
+						 posicion: req.params.posicion,
+						 errors: errores});
 	} else {
 		comment // save: guarda en DB campo texto de comment
 		.save()
 		.then( function(){ res.redirect('/quizes/'+req.params.quizId)}) ;
 	}
+};
+
+// DELETE /quizes/:id/comments/:posicion(\\d+)
+exports.destroy = function(req, res){
+	console.log('kk de vaca:'); 
+	req.quiz.comments[+req.params.posicion].destroy().then( function() {
+		res.redirect('/quizes/'+req.params.quizId);
+	}).catch( function(error){ next(error)});
 };
