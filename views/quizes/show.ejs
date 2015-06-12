@@ -3,3 +3,10 @@
       <input type="text" name="respuesta" value="Responda aquí" />
       <input type="submit" value="Envíar" />
 </form>
+
+<p><a href="/quizes/<%= quiz.id %>/comments/new"><button> Nuevo comentario</button></a></p>
+
+<p><strong>Comentarios:</strong></p>
+<% for(index in quiz.comments) { %>
+	<p>-<%= +index+1 %>- <%= quiz.comments[index].texto %></p>
+<% } %>
