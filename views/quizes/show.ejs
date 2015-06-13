@@ -11,8 +11,10 @@
 <tr><td><strong>Comentarios:</strong></td><td></td><td></td></tr>
 
 <% for(index in quiz.comments) { %>
+ <% if(quiz.comments[index].publicado || session.user){ %>
    <tr>
 	<td align="left">-<%= +index+1 %>- <%= quiz.comments[index].texto %></td>
+	<% if(session.user){ %>
 	<td><a href="/quizes/<%= quiz.id %>/comments/edit/<%= index %>"><button>editar</button></a></td>
 	<td>
       	  <form method="post" action="/quizes/<%= quiz.id %>/comments/<%= index %>?_method=delete">
@@ -21,6 +23,15 @@
             </button>
      	  </form>
 	</td>
+	<% } %>
+	<% if (session.user && !quiz.comments[index].publicado){ %>
+	<td><!-- <a href="/quizes/<%= quiz.id %>/comments/<%= index %>/publish"><button>Publicar</button></a> -->
+	  <form method="post" action="/quizes/<%= quiz.id %>/comments/<%= index %>/publish?_method=put">
+       	    <button type="submit">Publicar</button>
+     	  </form>
+	</td>
+	<% } %>
    </tr>
+  <% } %>
 <% } %>
 </table>

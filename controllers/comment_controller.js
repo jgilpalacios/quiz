@@ -1,5 +1,21 @@
 var models = require('../models/models.js');
 
+// Autoload :id de comentarios
+/*exports.load = function(req, res, next, commentId){
+	models.Comment.find({
+		where: {
+			id: Number(commentId)
+		}
+	}).then(function(comment) {
+		if(comment){
+		        console.log('comment'
+			req.comment =comment;
+			next();
+		} else { 
+			next(new Error ('No existe commentId=' + commentId ))}
+		}
+	).catch( function (error) { next( error )});
+};*/
 
 // GET /quizes/:quizId/comments/new
 exports.new = function(req, res){
@@ -64,4 +80,16 @@ exports.destroy = function(req, res){
 	req.quiz.comments[+req.params.posicion].destroy().then( function() {
 		res.redirect('/quizes/'+req.params.quizId);
 	}).catch( function(error){ next(error)});
+};
+
+// --GET /quizes/:quizId/comments/:commentId/publish
+// GET /quizes/:quizId/comments/:posicion/publish
+exports.publish = function(req, res) {
+	//console.log("++++++++req.comment: "+req.quiz.comments[+req.params.posicion].publicado);
+	var comment=req.quiz.comments[+req.params.posicion];
+	comment.publicado = true;
+	
+	comment.save( { fields: ["publicado"]})
+		.then( function() { res.redirect('/quizes/'+req.params.quizId);})
+		.catch( function(error){next(error)});
 };
