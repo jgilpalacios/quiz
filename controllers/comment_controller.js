@@ -83,7 +83,7 @@ exports.destroy = function(req, res){
 };
 
 // --GET /quizes/:quizId/comments/:commentId/publish
-// GET /quizes/:quizId/comments/:posicion/publish
+// PUT /quizes/:quizId/comments/:posicion/publish
 exports.publish = function(req, res) {
 	//console.log("++++++++req.comment: "+req.quiz.comments[+req.params.posicion].publicado);
 	var comment=req.quiz.comments[+req.params.posicion];
