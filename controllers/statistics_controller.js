@@ -10,9 +10,9 @@ exports.show = function(req, res){
     			 comentarios_no_pub: '--'
     			};
 
-	models.sequelize.query("SELECT count(*) as n FROM `Quizzes`").then(function(cuenta) {//nº de preguntas
+	models.sequelize.query("SELECT count(*) as n FROM Quizzes").then(function(cuenta) {//nº de preguntas
 		statistics.n_preguntas=cuenta[0].n;
-		models.sequelize.query("SELECT count(*) as n FROM `Comments`").then(function(cuenta) {//nº de comentarios
+		models.sequelize.query("SELECT count(*) as n FROM Comments").then(function(cuenta) {//nº de comentarios
 			statistics.n_comentarios=cuenta[0].n;
 			if(+statistics.n_preguntas>0) statistics.promedio_comentarios=cuenta[0].n/statistics.n_preguntas;//si es 0 el número de preguntas no está definido
 			models.sequelize.query("select count(*) as n from Quizzes where id in (Select distinct QuizId from Comments)").then(function(cuenta) {//nº de preguntas con comentario
