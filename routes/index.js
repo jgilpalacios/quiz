@@ -16,7 +16,8 @@ router.param('quizId', quizController.load); //autoload :quizId
 //router.param('comentId', commentController.load); //autoload :commentId
 
 // Definición de rutas de estadísticas
-router.get('/quizes/statistics',        statisticsController.show);  
+router.get('/quizes/statistics',        statisticsController.show); 
+router.get('/quizes/statisticsORM',        statisticsController.showORM);  
 
 // Definición de rutas de sesion
 router.get('/login', sessionController.new); 		// formularioo login
