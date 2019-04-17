@@ -1,15 +1,15 @@
-var models = require('../models/models.js');
+let models = require('../models/models.js');
 
 // GET /quizes/statistics
 exports.show = function(req, res){
-    	var statistics={ n_preguntas: ' -- ',
+    	let statistics={ n_preguntas: ' -- ',
 			 n_comentarios: ' -- ',
     			 promedio_comentarios: ' -- ',
     			 preg_sin_com: ' -- ',
     			 preg_con_com: ' -- ',
     			 comentarios_no_pub: '--'
     			};
-    		let t=models.tildeBD;//para abreviarlo
+    	let t=models.tildeBD;//para abreviarlo
 
 	models.sequelize.query(`SELECT count(*) AS n FROM ${t}Quizzes${t}`,{ type: models.sequelize.QueryTypes.SELECT})
 	.then(function(cuenta) {//nº de preguntas
@@ -28,15 +28,15 @@ exports.show = function(req, res){
 		statistics.comentarios_no_pub=cuenta[0].n;
 		res.render('statistics/show.ejs', {statistics: statistics, errors: []});		
   	}).catch(function(errors){
-			var i=0; var errores=new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
-			for (var prop in errors) errores[i++]={message: errors[prop]};		
+			let i=0; let errores=new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
+			for (let prop in errors) errores[i++]={message: errors[prop]};		
 			res.render('statistics/show.ejs', {statistics: statistics, errors: errores});
 	});
 
 };
 // GET /quizes/statisticsORM
 exports.showORM = function(req, res){
-    	var statistics={ n_preguntas: ' -- ',
+    	let statistics={ n_preguntas: ' -- ',
 			 n_comentarios: ' -- ',
     		 promedio_comentarios: ' -- ',
     		 preg_sin_com: ' -- ',
@@ -50,11 +50,6 @@ exports.showORM = function(req, res){
 		statistics.n_comentarios=result;
 		if(+statistics.n_preguntas>0) statistics.promedio_comentarios=result/statistics.n_preguntas;//si es 0 el número de preguntas no está definido
 		return models.Comment.count({distinct: true, col:"QuizId" });
-	/*}).then(function(result){
-		statistics.preg_con_com=result;
-		statistics.preg_sin_com=+statistics.n_preguntas-result;
-		return models.Comment.count({where: {publicado:{[Op.gte]: 1 }}});
-		//return models.sequelize.query('SELECT COUNT( DISTINCT ("QuizId")) as n FROM "Comments"');*/
 	}).then(function(result){
 		statistics.preg_con_com=result;
 		statistics.preg_sin_com=+statistics.n_preguntas-result;
@@ -65,8 +60,8 @@ exports.showORM = function(req, res){
 		statistics.comentarios_no_pub=result;
 		res.render('statistics/show.ejs', {statistics: statistics, errors: []});
 	}).catch(function(errors){
-			var i=0; var errores=new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
-			for (var prop in errors) errores[i++]={message: errors[prop]};		
+			let i=0; let errores=new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
+			for (let prop in errors) errores[i++]={message: errors[prop]};		
 			res.render('statistics/show.ejs', {statistics: statistics, errors: errores});
 	});
 

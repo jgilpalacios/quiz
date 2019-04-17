@@ -1,4 +1,4 @@
-var path = require('path');
+let path = require('path');
 
 //Postgres DATABASE_URL = postgres://usr:passwd@host:port/database
 //SQLite DATABSE_URL = sqlite://:@:/
@@ -8,27 +8,27 @@ dotenv.config();
 //process.env.DATABASE_STORAGE = 'quiz.sqlite';
 //process.env.DATABASE_URL = "postgres://sayxlxlqysfpvl:a7d7071dadfacd3b59b865b3d06701cd3bc5ae81394d8b19fa1960246897dd4c@ec2-54-227-251-233.compute-1.amazonaws.com:5432/d4hi85ukvknq5l";
 
-var url = process.env.DATABASE_URL.match(/(.*)\:\/\/(.*?)\:(.*)@(.*)\:(.*)\/(.*)/);
+let url = process.env.DATABASE_URL.match(/(.*)\:\/\/(.*?)\:(.*)@(.*)\:(.*)\/(.*)/);
 
 console.log(process.env.DATABASE_URL+'--'+url);
 
-var DB_name  = (url[6]||null);//var DB_name  = (url[6]||null);
-var user     = (url[2]||null);
-var pwd      = (url[3]||null);
-var protocol = (url[1]||null);
-var dialect  = (url[1]||null);
-var port     = (url[5]||null);
-var host     = (url[4]||null);
-var storage  = process.env.DATABASE_STORAGE;
+let DB_name  = (url[6]||null);//let DB_name  = (url[6]||null);
+let user     = (url[2]||null);
+let pwd      = (url[3]||null);
+let protocol = (url[1]||null);
+let dialect  = (url[1]||null);
+let port     = (url[5]||null);
+let host     = (url[4]||null);
+let storage  = process.env.DATABASE_STORAGE;
 
-var tildeBD='`';//mysql para entrecomillar los nombres de tablas, campos etc. en raw consultas
+let tildeBD='`';//mysql para entrecomillar los nombres de tablas, campos etc. en raw consultas
 if(protocol==='postgres'||protocol==='sqlite') tildeBD='"';
 console.log(`protocolo: ${protocol} se usa para raw la tilde:${tildeBD}`);
 // Cargar Modelo ORM
-var Sequelize = require('sequelize');
+let Sequelize = require('sequelize');
 
 //Usar BBDD SQLite o Postgres:
-var sequelize = new Sequelize(DB_name, user, pwd,
+let sequelize = new Sequelize(DB_name, user, pwd,
 		{ dialect:  protocol,
 		  protocol: protocol,
 		  port:     port,
@@ -42,12 +42,12 @@ var sequelize = new Sequelize(DB_name, user, pwd,
 //const sequelize = new Sequelize("sqlite:quiz.sqlite", options);
 
 // Importar la definicion de la tabla Quiz en quiz.js
-var quiz_path = path.join(__dirname, 'quiz');
-var Quiz = sequelize.import(quiz_path);
+let quiz_path = path.join(__dirname, 'quiz');
+let Quiz = sequelize.import(quiz_path);
 
 // Importar la definicion de la tabla Comment en comment.js
-var comment_path = path.join(__dirname, 'comment');
-var Comment = sequelize.import(comment_path);
+let comment_path = path.join(__dirname, 'comment');
+let Comment = sequelize.import(comment_path);
 
 //relacion Quiz 1:n Coment
 Comment.belongsTo(Quiz);
@@ -85,21 +85,5 @@ sequelize.sync() // Syncronize DB and seed if needed
     }
 })
 .catch( err => console.log(`   ${err}`));
-// sequelize.sinc() crea e inicializa tabla de preguntas en DB
-/*sequelize.sync().success(function() {
-	// succes(..) ejecuta el manejador una vez creada la tabla
-	Quiz.count().success(function (count){
-		if(count === 0) { // la tabla se incializa solo si está vacía
-			Quiz.create({ pregunta: 'Capital de Italia',
-				      respuesta: 'Roma',
-				      tema: 'Humanidades'
-				    });
-			Quiz.create({ pregunta: 'Capital de Portugal',
-				      respuesta: 'Lisboa',
-				      tema: 'Humanidades'
-				    })
-			.then(function(){console.log('Base de datos inicializada')});
-		};
-	});
-});*/
+
 

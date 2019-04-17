@@ -15,20 +15,20 @@
     <% if(session.user){ %>
     <script type="text/javascript">
     	//carga el tiempo de sesion al cargar la página
-       var plazo=<%= session.plazo %>;
+       let plazo=<%= session.plazo %>;
        //función que muestra la cuenta atras del tiempo que queda de sesión
        function muestraTiempo(){
-          var pl = document.getElementById('plazo');
-          var log=document.getElementById('log');
+          let pl = document.getElementById('plazo');
+          let log=document.getElementById('log');
           if(plazo<0){ //ya ha caducado la sesion aunque no se verá hasta recargar, por lo que se permite relogear sin recargar
          	 pl.innerHTML = '';
          	 log.href='/login';
          	 log.innerHTML='re-Login';
           }else{//vamos con la cuenta atras
-          	var min=Math.floor(plazo/60);
-          	var seg=(plazo--)%60;
-          	var sMin='00'+min;
-          	var sSeg='00'+seg; 
+          	let min=Math.floor(plazo/60);
+          	let seg=(plazo--)%60;
+          	let sMin='00'+min;
+          	let sSeg='00'+seg; 
           	pl.innerHTML = sMin.substring(sMin.length-2)+':'+sSeg.substring(sSeg.length-2)+' '; 
           } 
        }
@@ -59,7 +59,7 @@
        <% if (errors.length) { %>
        		<span id="ErrorMsgs">
        		  Corregir errores:<br/>
-       		  <% for (var i in errors) { %>
+       		  <% for (let i in errors) { %>
        		  	<span> <%= errors[i].message %> </span><br/>
        		  <% } %>
        		</span>

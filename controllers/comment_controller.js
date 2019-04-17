@@ -1,4 +1,4 @@
-var models = require('../models/models.js');
+let models = require('../models/models.js');
 
 // Autoload :id de comentarios
 /*exports.load = function(req, res, next, commentId){
@@ -40,17 +40,6 @@ exports.create = function(req, res){
 		res.render('comments/new.ejs', {comment: comment, quizid: req.params.quizId, errors: errores});
 	});
 	
-	/*var errors = comment.validate();//ya qe el objeto errors no tiene then(
-	if (errors)
-	{
-		var i=0; var errores=new Array();//se convierte en [] con la propiedad message por compatibilida con layout
-		for (var prop in errors) errores[i++]={message: errors[prop]};		
-		res.render('comments/new.ejs', {comment: comment, quizid: req.params.quizId, errors: errores});
-	} else {
-		comment // save: guarda en DB campo texto de comment
-		.save()
-		.then( function(){ res.redirect('/quizes/'+req.params.quizId)}) ;
-	}//.catch(function(error){next(error)})*/
 };
 
 // GET /quizes/:id/comments/edit/:posicion
@@ -64,7 +53,7 @@ exports.edit = function(req, res){
 
 // PUT /quizes/:id/comments/:posicion(\\d+)
 exports.update = function(req, res){
-	var comment=req.quiz.Comments[+req.params.posicion];
+	let comment=req.quiz.Comments[+req.params.posicion];
 	
 	comment.texto = req.body.comment.texto;
 	comment.validate()
@@ -83,21 +72,6 @@ exports.update = function(req, res){
 						 errors: errores});
 	});
 	
-	/*var errors = comment.validate();//ya qe el objeto errors no tiene then( y aparece error al invocarlo
-	if (errors)
-	{
-		var i=0; var errores=new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
-		for (var prop in errors) errores[i++]={message: errors[prop]};		
-		res.render('comments/edit.ejs', {comment: comment,
-						 quizid: req.params.quizId,
-						 taedit: comment.texto,
-						 posicion: req.params.posicion,
-						 errors: errores});
-	} else {
-		comment // save: guarda en DB campo texto de comment
-		.save()
-		.then( function(){ res.redirect('/quizes/'+req.params.quizId)}) ;
-	}*/
 };
 
 // DELETE /quizes/:id/comments/:posicion(\\d+)
@@ -112,7 +86,7 @@ exports.destroy = function(req, res){
 // PUT /quizes/:quizId/comments/:posicion/publish
 exports.publish = function(req, res) {
 	//console.log("++++++++req.comment: "+req.quiz.comments[+req.params.posicion].publicado);
-	var comment=req.quiz.Comments[+req.params.posicion];
+	let comment=req.quiz.Comments[+req.params.posicion];
 	comment.publicado = true;
 	
 	comment.save( { fields: ["publicado"]})
