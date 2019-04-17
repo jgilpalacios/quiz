@@ -2,13 +2,13 @@ var path = require('path');
 
 //Postgres DATABASE_URL = postgres://usr:passwd@host:port/database
 //SQLite DATABSE_URL = sqlite://:@:/
-//const dotenv = require('dotenv');
-//dotenv.config();
-process.env.DATABASE_URL = "sqlite://:@:";
-process.env.DATABASE_STORAGE = 'quiz.sqlite';
+const dotenv = require('dotenv');
+dotenv.config();
+//process.env.DATABASE_URL = "sqlite://:@:";
+//process.env.DATABASE_STORAGE = 'quiz.sqlite';
 //process.env.DATABASE_URL = "postgres://sayxlxlqysfpvl:a7d7071dadfacd3b59b865b3d06701cd3bc5ae81394d8b19fa1960246897dd4c@ec2-54-227-251-233.compute-1.amazonaws.com:5432/d4hi85ukvknq5l";
 
-/*var url = process.env.DATABASE_URL.match(/(.*)\:\/\/(.*?)\:(.*)@(.*)\:(.*)\/(.*)/);
+var url = process.env.DATABASE_URL.match(/(.*)\:\/\/(.*?)\:(.*)@(.*)\:(.*)\/(.*)/);
 
 console.log(process.env.DATABASE_URL+'--'+url);
 
@@ -18,14 +18,14 @@ var pwd      = (url[3]||null);
 var protocol = (url[1]||null);
 var dialect  = (url[1]||null);
 var port     = (url[5]||null);
-var host     = (url[4]||null);*/
+var host     = (url[4]||null);
 var storage  = process.env.DATABASE_STORAGE;
 
 // Cargar Modelo ORM
 var Sequelize = require('sequelize');
 
 //Usar BBDD SQLite o Postgres:
-/*var sequelize = new Sequelize(DB_name, user, pwd,
+var sequelize = new Sequelize(DB_name, user, pwd,
 		{ dialect:  protocol,
 		  protocol: protocol,
 		  port:     port,
@@ -33,9 +33,9 @@ var Sequelize = require('sequelize');
 		  storage:  storage, //solo SQLite (.env)
 		  omitNull: true     //solo Postgres
 		}
-	);*/
-const options = { /*logging: false, operatorsAliases: false*/};
-const sequelize = new Sequelize("sqlite:quiz.sqlite", options);
+	);
+//const options = { /*logging: false, operatorsAliases: false*/};
+//const sequelize = new Sequelize("sqlite:quiz.sqlite", options);
 
 // Importar la definicion de la tabla Quiz en quiz.js
 var quiz_path = path.join(__dirname, 'quiz');
