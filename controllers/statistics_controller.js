@@ -9,18 +9,21 @@ exports.show = function(req, res){
     			 preg_con_com: ' -- ',
     			 comentarios_no_pub: '--'
     			};
+    		let t=models.tildeBD;//para abreviarlo
 
-	models.sequelize.query('SELECT count(*) AS n FROM "Quizzes"').then(function(cuenta) {//nº de preguntas
+	models.sequelize.query(`SELECT count(*) AS n FROM ${t}Quizzes${t}`,{ type: models.sequelize.QueryTypes.SELECT})
+	.then(function(cuenta) {//nº de preguntas
 		statistics.n_preguntas=cuenta[0].n;
-		return models.sequelize.query('SELECT count(*) AS n FROM "Comments"');
+		return models.sequelize.query(`SELECT count(*) AS n FROM ${t}Comments${t}`,{ type: models.sequelize.QueryTypes.SELECT});
 	}).then(function(cuenta) {//nº de comentarios
 		statistics.n_comentarios=cuenta[0].n;
 		if(+statistics.n_preguntas>0) statistics.promedio_comentarios=cuenta[0].n/statistics.n_preguntas;//si es 0 el número de preguntas no está definido
-		return models.sequelize.query('SELECT count(*) AS n FROM "Quizzes" WHERE "id" IN (SELECT DISTINCT "QuizId" FROM "Comments")')
+		return models.sequelize.query(`SELECT count(*) AS n FROM ${t}Quizzes${t} WHERE ${t}id${t} IN (SELECT DISTINCT ${t}QuizId${t} FROM ${t}Comments${t})`,
+			{ type: models.sequelize.QueryTypes.SELECT})
 	}).then(function(cuenta) {//nº de preguntas con comentario
 		statistics.preg_con_com=cuenta[0].n;
 		statistics.preg_sin_com=+statistics.n_preguntas-cuenta[0].n;
-		return models.sequelize.query('SELECT count(*) AS n FROM "Comments" WHERE NOT "publicado"')
+		return models.sequelize.query(`SELECT count(*) AS n FROM ${t}Comments${t} WHERE NOT ${t}publicado${t}`, { type: models.sequelize.QueryTypes.SELECT})
 	}).then(function(cuenta) {//nº de comentarios no publicados				
 		statistics.comentarios_no_pub=cuenta[0].n;
 		res.render('statistics/show.ejs', {statistics: statistics, errors: []});		

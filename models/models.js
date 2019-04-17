@@ -21,6 +21,9 @@ var port     = (url[5]||null);
 var host     = (url[4]||null);
 var storage  = process.env.DATABASE_STORAGE;
 
+var tildeBD='`';//mysql para entrecomillar los nombres de tablas, campos etc. en raw consultas
+if(protocol==='postgres'||protocol==='sqlite') tildeBD='"';
+console.log(`protocolo: ${protocol} se usa para raw la tilde:${tildeBD}`);
 // Cargar Modelo ORM
 var Sequelize = require('sequelize');
 
@@ -31,7 +34,8 @@ var sequelize = new Sequelize(DB_name, user, pwd,
 		  port:     port,
 		  host:     host,
 		  storage:  storage, //solo SQLite (.env)
-		  omitNull: true     //solo Postgres
+		  omitNull: true,     //solo Postgres
+		  logging: false //no muestra en consola las consultas
 		}
 	);
 //const options = { /*logging: false, operatorsAliases: false*/};
@@ -55,13 +59,13 @@ Quiz.hasMany(Comment,{
 }); 
 
 
+exports.tildeBD=tildeBD; //para entrecomillar nombres de campos tablas en bd dependiendo del protocolo en raw consultas
 exports.Quiz = Quiz; //exportar la definición de la tabla Quiz
 exports.Comment = Comment; //exportar la definición de la tabla Comment
 exports.sequelize = sequelize;//exportamos BD para estadísticas.
 
 const Op=Sequelize.Op;
-exports.Op=Op;
-console.log(JSON.stringify(Op));
+exports.Op=Op; //exportar operadores parametrizados
 
 sequelize.sync() // Syncronize DB and seed if needed
 .then(() => Quiz.count())
