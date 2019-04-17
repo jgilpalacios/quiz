@@ -24,12 +24,23 @@ exports.new = function(req, res){
 
 // POST /quizes/:quizId/comments
 exports.create = function(req, res){
-	var comment = models.Comment.build( 
+	let comment = models.Comment.build( 
 		{ texto: req.body.comment.texto,
 		  QuizId: req.params.quizId } 
 	);
+	comment.validate()
+	.then((comment)=>{
+		comment.save()
+		.then((comment) => res.redirect('/quizes/'+req.params.quizId))
+	})
+	.catch((errors) => {
+		let errores=[];
+		let i=0; 
+		for (let prop in errors) errores[i++]={message: JSON.stringify(errors[prop])};
+		res.render('comments/new.ejs', {comment: comment, quizid: req.params.quizId, errors: errores});
+	});
 	
-	var errors = comment.validate();//ya qe el objeto errors no tiene then(
+	/*var errors = comment.validate();//ya qe el objeto errors no tiene then(
 	if (errors)
 	{
 		var i=0; var errores=new Array();//se convierte en [] con la propiedad message por compatibilida con layout
@@ -39,25 +50,40 @@ exports.create = function(req, res){
 		comment // save: guarda en DB campo texto de comment
 		.save()
 		.then( function(){ res.redirect('/quizes/'+req.params.quizId)}) ;
-	}//.catch(function(error){next(error)})
+	}//.catch(function(error){next(error)})*/
 };
 
 // GET /quizes/:id/comments/edit/:posicion
 exports.edit = function(req, res){
 	//console.log('kk de vaca:'+req.params.quizId+'; req.params.posicion: '+req.params.posicion+'; req.quiz.comments[0]: '+req.quiz.comments[+req.params.posicion].texto );
 	res.render('comments/edit.ejs', {	quizid: req.params.quizId, 
-						taedit: req.quiz.comments[+req.params.posicion].texto,//req.comments[req.params.posicion].texto, 
+						taedit: req.quiz.Comments[+req.params.posicion].texto,//req.comments[req.params.posicion].texto, 
 						posicion: req.params.posicion,//req.comments[req.params.posicion].id, 
 						errors: []});
 };
 
 // PUT /quizes/:id/comments/:posicion(\\d+)
 exports.update = function(req, res){
-	var comment=req.quiz.comments[+req.params.posicion];
+	var comment=req.quiz.Comments[+req.params.posicion];
 	
 	comment.texto = req.body.comment.texto;
+	comment.validate()
+	.then((comment)=>{
+		comment.save()
+		.then((comment) => res.redirect('/quizes/'+req.params.quizId))
+	})
+	.catch((errors) => {
+		let errores=[];
+		let i=0; 
+		for (let prop in errors) errores[i++]={message: JSON.stringify(errors[prop])};
+		res.render('comments/edit.ejs', {comment: comment,
+						 quizid: req.params.quizId,
+						 taedit: comment.texto,
+						 posicion: req.params.posicion,
+						 errors: errores});
+	});
 	
-	var errors = comment.validate();//ya qe el objeto errors no tiene then( y aparece error al invocarlo
+	/*var errors = comment.validate();//ya qe el objeto errors no tiene then( y aparece error al invocarlo
 	if (errors)
 	{
 		var i=0; var errores=new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
@@ -71,13 +97,13 @@ exports.update = function(req, res){
 		comment // save: guarda en DB campo texto de comment
 		.save()
 		.then( function(){ res.redirect('/quizes/'+req.params.quizId)}) ;
-	}
+	}*/
 };
 
 // DELETE /quizes/:id/comments/:posicion(\\d+)
 exports.destroy = function(req, res){
 	console.log('kk de vaca:'); 
-	req.quiz.comments[+req.params.posicion].destroy().then( function() {
+	req.quiz.Comments[+req.params.posicion].destroy().then( function() {
 		res.redirect('/quizes/'+req.params.quizId);
 	}).catch( function(error){ next(error)});
 };
@@ -86,7 +112,7 @@ exports.destroy = function(req, res){
 // PUT /quizes/:quizId/comments/:posicion/publish
 exports.publish = function(req, res) {
 	//console.log("++++++++req.comment: "+req.quiz.comments[+req.params.posicion].publicado);
-	var comment=req.quiz.comments[+req.params.posicion];
+	var comment=req.quiz.Comments[+req.params.posicion];
 	comment.publicado = true;
 	
 	comment.save( { fields: ["publicado"]})

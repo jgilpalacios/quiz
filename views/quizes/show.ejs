@@ -10,21 +10,21 @@
 
 <tr><td><strong>Comentarios:</strong></td><td></td><td></td></tr>
 
-<% for(index in quiz.comments) { %>
- <% if(quiz.comments[index].publicado || session.user){ %>
+<% for(let index=0; index<quiz.Comments.length; index++/*in quiz.comments*/) { %>
+ <% if(quiz.Comments[index].publicado || session.user){ %>
    <tr>
-	<td align="left">-<%= +index+1 %>- <%= quiz.comments[index].texto %></td>
+	<td align="left">-<%= +index+1 %>- <%= quiz.Comments[index].texto %></td>
 	<% if(session.user){ %>
 	<td><a href="/quizes/<%= quiz.id %>/comments/edit/<%= index %>"><button>editar</button></a></td>
 	<td>
       	  <form method="post" action="/quizes/<%= quiz.id %>/comments/<%= index %>?_method=delete">
-       	    <button type="submit" onClick="return confirm('Borrar: <%= quiz.comments[index].texto %>');">
+       	    <button type="submit" onClick="return confirm('Borrar: <%= quiz.Comments[index].texto %>');">
           	borrar
             </button>
      	  </form>
 	</td>
 	<% } %>
-	<% if (session.user && !quiz.comments[index].publicado){ %>
+	<% if (session.user && !quiz.Comments[index].publicado){ %>
 	<td><!-- <a href="/quizes/<%= quiz.id %>/comments/<%= index %>/publish"><button>Publicar</button></a> -->
 	  <form method="post" action="/quizes/<%= quiz.id %>/comments/<%= index %>/publish?_method=put">
        	    <button type="submit">Publicar</button>
