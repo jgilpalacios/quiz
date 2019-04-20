@@ -1,0 +1,6 @@
+Editar tema: <p>
+
+<form method="post" action="/quizes/topics/<%= posicion %>?_method=put" >
+	<input type="text" id="topic" name="topic[texto]" value="<%= topic.texto %>" /> <p>
+	<button type="submit">Enviar</button><a href="/quizes/topics/"><button type="button">Cancelar</button></a>
+</form>

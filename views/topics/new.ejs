@@ -1,0 +1,24 @@
+<% if(session.user){ %>
+Añadir Tema: <p>
+
+<form method="post" action="/quizes/topics/create" >
+	<input type="text" id="topic" name="topic[texto]" value "" /> <p>
+	<button type="submit">Enviar</button><a href="/quizes/topics/create"><button type="button">Cancelar</button></a>
+</form>
+<table>
+<tr><td><strong>Temas:</strong></td><td></td><td></td></tr>
+  <% for(let index=0; index<topics.length; index++) { %>
+   <tr>
+	<td align="left">-<%= +index+1 %>- <%= topics[index].texto %></td>
+	<td><a href="/quizes/topics/edit/<%= index %>"><button>editar</button></a></td>
+	<td>
+      	  <form method="post" action="/quizes/topics/<%= index %>?_method=delete">
+       	    <button type="submit" onClick="return confirm('Borrar: <%= topics[index].texto %>');">
+          	borrar
+            </button>
+     	  </form>
+	</td>
+   </tr>
+  <% } %>
+</table>
+<% } %>

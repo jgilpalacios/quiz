@@ -1,0 +1,19 @@
+<% if(session.user){ %>
+<table>
+<tr><td><strong>Temas:</strong></td><td></td><td></td></tr>
+  <% for(let index=0; index<topics.length; index++) { %>
+   <tr>
+	<td align="left">-<%= +index+1 %>- <%= topics[index].texto %></td>
+	<td><a href="/quizes/topics/edit/<%= topics[index].id %>"><button>editar</button></a></td>
+	<td>
+      	  <form method="post" action="/quizes/topics/<%= topics[index].id %>?_method=delete">
+       	    <button type="submit" onClick="return confirm('Borrar: <%= topics[index].texto %>');">
+          	borrar
+            </button>
+     	  </form>
+	</td>
+   </tr>
+  <% } %>
+</table>
+<p><a href="/quizes/topics/new?topics=<%=encodeURI(JSON.stringify(topics)) %>"><button type="button">Crear tema.</button></a></p>
+<% } %>
