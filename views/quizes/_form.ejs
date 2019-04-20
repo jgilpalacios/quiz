@@ -4,8 +4,11 @@
 <input type="text" id="resp" name="quiz[respuesta]" value="<%= quiz.respuesta %>"/> <p>
 <label for="tema" class="rem">Tema:</label>
  <select name="quiz[tema]">
-  <% var opciones=['', 'Ciencia', 'Humanidades', 'Ocio', 'Otro', 'Tecnología' ];
-   for (var i=0;i<opciones.length;i++){ %>
+  <% let opciones=[''];
+  		topics.forEach((topic,i)=>{
+  			opciones[++i]=topic.texto;
+  		});
+   for (let i=0;i<opciones.length;i++){ %>
    <option value="<%= opciones[i] %>" <% if (opciones[i]===quiz.tema){ %> <%='selected' %> <% } %>> <%= opciones[i] %> </option>
   <% } %>
  </select> <p>

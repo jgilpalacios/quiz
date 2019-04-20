@@ -4,7 +4,9 @@
       <input type="submit" value="Envíar" />
 </form>
 
-<p><a href="/quizes/<%= quiz.id %>/comments/new"><button> Nuevo comentario</button></a></p>
+<p><a href="/quizes/<%= quiz.id %>/comments/new"><button> Nuevo comentario</button></a>
+   <a href="/quizes"><button> Volver </button></a>
+</p>
 
 <table>
 
@@ -26,11 +28,17 @@
 	<% } %>
 	<% if (session.user && !quiz.Comments[index].publicado){ %>
 	<td><!-- <a href="/quizes/<%= quiz.id %>/comments/<%= index %>/publish"><button>Publicar</button></a> -->
-	  <form method="post" action="/quizes/<%= quiz.id %>/comments/<%= index %>/publish?_method=put">
+	  	 <form method="post" action="/quizes/<%= quiz.id %>/comments/<%= index %>/publish?_method=put">
        	    <button type="submit">Publicar</button>
-     	  </form>
+     	 </form>
 	</td>
-	<% } %>
+	<% console.log(session.user+' ++++ '+quiz.Comments[index].publicado)}; if (session.user && quiz.Comments[index].publicado) { %>
+	<td>
+	  	<form method="post" action="/quizes/<%= quiz.id %>/comments/<%= index %>/unpublish?_method=put">
+       	    <button type="submit">Despublicar</button>
+     	</form>
+	</td>
+	<% }  %>
    </tr>
   <% } %>
 <% } %>

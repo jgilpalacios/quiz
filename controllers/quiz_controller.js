@@ -1,4 +1,5 @@
 let models = require('../models/models.js');
+let topicController = require('../controllers/topic_controller');
 
 // Autoload - factoriza el código si ruta incluye :qizId
 exports.load = function(req, res, next, quizId){
@@ -46,9 +47,20 @@ exports.answer = function(req, res){
 // GET /quizes/new
 exports.new = function(req, res){
 	let quiz = models.Quiz.build(// crea objeto quiz
-		{pregunta: "Pregunta", respuesta: "Respuesta", tema: ""}
+		{pregunta: undefined/*"Pregunta"*/, respuesta: null/*"Respuesta"*/, tema: ""}
 	);
-	res.render('quizes/new', {quiz: quiz, errors: []});
+	//let topics; //consultamosla lista de temas
+	models.Topic.findAll({attributes: ['texto'], order: ['texto']})
+	.then(
+	  function(topics){
+	  	/*console.log(JSON.stringify( result ));
+		topics=result;*/
+		//console.log('Vamos que no sale: '+JSON.stringify( topics ));
+		res.render('quizes/new', {quiz: quiz, topics: topics, errors: []});
+	  })
+	.catch(function(error) { next(error);})
+	/*console.log('Vamos que no sale: '+JSON.stringify( topics ));
+	res.render('quizes/new', {quiz: quiz, topics: topics, errors: []});*/
 };
 
 // POST /quizes/create
@@ -75,8 +87,17 @@ exports.create = function(req, res, next){
 // GET /quizes/:id/edit
 exports.edit = function(req, res){
 	let quiz = req.quiz; // autoload de instancia quiz
-		
-	res.render('quizes/edit', {quiz: quiz, errors: []});
+	//console.log('jjjj'+JSON.stringify(quiz));
+	models.Topic.findAll({attributes: ['texto'], order: ['texto']})
+	.then((topics)=>{
+		res.render('quizes/edit', {quiz: quiz, topics: topics, errors: []});
+	})
+	.catch((errors)=>{
+		let errores=[];
+		let i=0; 
+		for (let prop in errors) errores[i++]={message: JSON.stringify(errors[prop])};
+		res.render('quizes/edit.ejs', {quiz: req.quiz, errors: errores});
+	});
 };
 
 // PUT /quizes/:id

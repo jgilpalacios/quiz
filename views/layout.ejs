@@ -54,6 +54,9 @@
         <span><a href="/author">Autor</a></span>
         <span><a href="/quizes/statistics">Estadísticas</a></span>
         <span><a href="/quizes/statisticsORM">EstadísticasORM</a></span>
+		<% if(session.user){ %>
+		<span><a href="/quizes/topics/">Temas</a></span>
+		<% } %>
       </nav>
       <section class="main" id="s1">
        <% if (errors.length) { %>

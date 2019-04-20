@@ -93,3 +93,13 @@ exports.publish = function(req, res) {
 		.then( function() { res.redirect('/quizes/'+req.params.quizId);})
 		.catch( function(error){next(error)});
 };
+// PUT /quizes/:quizId/comments/:posicion/unpublish
+exports.unpublish = function(req, res) {
+	//console.log("++++++++req.comment: "+req.quiz.comments[+req.params.posicion].publicado);
+	let comment=req.quiz.Comments[+req.params.posicion];
+	comment.publicado = false;
+	
+	comment.save( { fields: ["publicado"]})
+		.then( function() { res.redirect('/quizes/'+req.params.quizId);})
+		.catch( function(error){next(error)});
+};

@@ -35,7 +35,7 @@ let sequelize = new Sequelize(DB_name, user, pwd,
 		  host:     host,
 		  storage:  storage, //solo SQLite (.env)
 		  omitNull: true,     //solo Postgres
-		  logging: false //no muestra en consola las consultas
+		  logging: true//false //no muestra en consola las consultas
 		}
 	);
 //const options = { /*logging: false, operatorsAliases: false*/};
@@ -48,6 +48,10 @@ let Quiz = sequelize.import(quiz_path);
 // Importar la definicion de la tabla Comment en comment.js
 let comment_path = path.join(__dirname, 'comment');
 let Comment = sequelize.import(comment_path);
+
+// Importar la definicion de la tabla Topic en topic.js
+let topic_path = path.join(__dirname, 'topic');
+let Topic = sequelize.import(topic_path);
 
 //relacion Quiz 1:n Coment
 Comment.belongsTo(Quiz);
@@ -62,13 +66,14 @@ Quiz.hasMany(Comment,{
 exports.tildeBD=tildeBD; //para entrecomillar nombres de campos tablas en bd dependiendo del protocolo en raw consultas
 exports.Quiz = Quiz; //exportar la definición de la tabla Quiz
 exports.Comment = Comment; //exportar la definición de la tabla Comment
+exports.Topic = Topic; //exportar la definición de la tabla Comment
 exports.sequelize = sequelize;//exportamos BD para estadísticas.
 
 const Op=Sequelize.Op;
 exports.Op=Op; //exportar operadores parametrizados
 
 sequelize.sync() // Syncronize DB and seed if needed
-.then(() => Quiz.count())
+.then(() => Quiz.count()) //Creamos la tabla de preguntas iniciales
 .then((count) => {
     if (count===0) {
         return ( 
@@ -78,10 +83,27 @@ sequelize.sync() // Syncronize DB and seed if needed
                 { id: 3, pregunta: "Capital de España", respuesta: "Madrid", tema: 'Humanidades' },
                 { id: 4, pregunta: "Capital de Portugal", respuesta: "Lisboa", tema: 'Humanidades' }
             ])
-            .then( c => console.log(`  DB created with ${c.length} elems`))
+            .then( c => console.log(`  DB Quiz created with ${c.length} elems`))
         )
     } else {
-        return console.log(`  DB exists & has ${count} elems`);
+        return console.log(`  DB Quiz exists & has ${count} elems`);
+    }
+})
+.then(() => Topic.count()) //Creamos la tabla de temas inciales
+.then((count) => {
+    if (count===0) {
+        return ( 
+            Topic.bulkCreate([
+                { id: 1, texto: "Ciencia" },
+                { id: 2, texto: "Humanidades" },
+                { id: 3, texto: "Ocio" },
+                { id: 4, texto: "Otro" },
+                { id: 5, texto: "Tecnología" }
+            ])
+            .then( c => console.log(`  DB Topic created with ${c.length} elems`))
+        )
+    } else {
+        return console.log(`  DB Topic exists & has ${count} elems`);
     }
 })
 .catch( err => console.log(`   ${err}`));
