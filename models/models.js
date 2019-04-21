@@ -35,7 +35,7 @@ let sequelize = new Sequelize(DB_name, user, pwd,
 		  host:     host,
 		  storage:  storage, //solo SQLite (.env)
 		  omitNull: true,     //solo Postgres
-		  logging: true//false //no muestra en consola las consultas
+		  logging: false //no muestra en consola las consultas
 		}
 	);
 //const options = { /*logging: false, operatorsAliases: false*/};
@@ -53,6 +53,10 @@ let Comment = sequelize.import(comment_path);
 let topic_path = path.join(__dirname, 'topic');
 let Topic = sequelize.import(topic_path);
 
+// Importar la definicion de la tabla User en user.js
+let user_path = path.join(__dirname, 'user');
+let User = sequelize.import(user_path);
+
 //relacion Quiz 1:n Coment
 Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment,{
@@ -66,7 +70,8 @@ Quiz.hasMany(Comment,{
 exports.tildeBD=tildeBD; //para entrecomillar nombres de campos tablas en bd dependiendo del protocolo en raw consultas
 exports.Quiz = Quiz; //exportar la definición de la tabla Quiz
 exports.Comment = Comment; //exportar la definición de la tabla Comment
-exports.Topic = Topic; //exportar la definición de la tabla Comment
+exports.Topic = Topic; //exportar la definición de la tabla Topic
+exports.User = User; //exportar la definición de la tabla Topic
 exports.sequelize = sequelize;//exportamos BD para estadísticas.
 
 const Op=Sequelize.Op;
@@ -104,6 +109,20 @@ sequelize.sync() // Syncronize DB and seed if needed
         )
     } else {
         return console.log(`  DB Topic exists & has ${count} elems`);
+    }
+})
+.then(() => User.count()) //Creamos la tabla de usuarios inciales
+.then((count) => {
+    if (count===0) {
+        return ( 
+            User.bulkCreate([
+                {id: 1, username: 'admin', password: '1234'},
+                {id: 2, username: 'pepe',  password: '5678'}
+            ])
+            .then( c => console.log(`  DB User created with ${c.length} elems`))
+        )
+    } else {
+        return console.log(`  DB User exists & has ${count} elems`);
     }
 })
 .catch( err => console.log(`   ${err}`));

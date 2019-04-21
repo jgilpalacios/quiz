@@ -21,7 +21,7 @@ router.get('/quizes/statistics',        statisticsController.show);
 router.get('/quizes/statisticsORM',        statisticsController.showORM);  
 
 // Definición de rutas de sesion
-router.get('/login', sessionController.new); 		// formularioo login
+router.get('/login', sessionController.new); 		// formulario login
 router.post('/login', sessionController.create); 	// crear sesión
 router.get('/logout', sessionController.destroy);	// destruir sesión
 
