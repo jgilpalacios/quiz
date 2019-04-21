@@ -1,9 +1,18 @@
 <form method="get" action="/quizes" name="busqueda">Texto de búsqueda:<input
-name="search" value="texto a buscar"><input name="enviar"
+name="search" value=""> <label for="tema" class="rem">Tema:</label>
+ <select name="tema">
+  <% let opciones=[undefined];
+  		topics.forEach((topic,i)=>{
+  			opciones[++i]=topic.texto;
+  		});
+   for (let i=0;i<opciones.length;i++){ %>
+   <option value="<%= opciones[i] %>" > <%= opciones[i] %> </option>
+  <% } %>
+ </select><input name="enviar"
 value="enviar" type="submit"><br>
 </form>
 <table>
-<% var i; for (i=0; i < quizes.length; i++) {%>
+<% let i; let quizesIds=[]; for (i=0; i < quizes.length; i++) { quizesIds[i]=quizes[i].id;  %>
   <tr>
     <td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
     <% if(session.user){ %>
@@ -19,6 +28,11 @@ value="enviar" type="submit"><br>
   </tr>
 <% } %>
 </table>
+<p>
+<a href="/quizes/playAll?quizesIds=<%=encodeURI(JSON.stringify(quizesIds)) %>&aciertos=0"><button type="button">Respoder la selección.</button></a>
 <% if(session.user){ %>
-<p><a href="/quizes/new"><button type="button">Crear pregunta.</button></a></p>
+<a href="/quizes/new"><button type="button">Crear pregunta.</button></a>
 <% } %>
+</p>
+<!--    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js" > </script>
+    <script type="text/javascript" src="/js/mi.js">  </script> -->

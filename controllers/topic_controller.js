@@ -34,7 +34,7 @@ exports.topicsAll;*/
 
 // GET /quizes/topics/
 exports.show = function(req, res){
-	models.Topic.findAll()
+	models.Topic.findAll({ order: ['texto']})
 	.then(
 	  function(topics){
 		console.log(JSON.stringify(topics));

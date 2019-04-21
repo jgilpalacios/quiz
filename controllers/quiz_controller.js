@@ -18,15 +18,24 @@ exports.index = function(req, res, next){
 	//const Op = Sequelize.Op;
 	let condicion=req.query.search || '%';
 	if (condicion!='%') condicion='%'+condicion.replace(/\s/g, '%')+'%';
-	
+	let quizes;
+	let topic
+	if(req.query.tema) topic={tema: req.query.tema}
+	else topic= true;
 	//models.Quiz.findAll({where: ["pregunta like ?", condicion]})
-	models.Quiz.findAll({where: {pregunta: { [models.Op.like]: condicion}}})
+	models.Quiz.findAll({where: {pregunta: { [models.Op.like]: condicion}, [models.Op.and]: topic }})
 	//models.sequelize.query('SELECT * FROM Quizzes WHERE pregunta like ?', { raw: true, replacements: [condicion] } )
 	//models.Quiz.findAll()
-	.then(
-	  function(quizes){
-		res.render('quizes/index',{quizes: quizes, errors: []});
+	.then( function(results){
+		quizes=results
+		//res.render('quizes/index',{quizes: quizes, errors: []});
+		return models.Topic.findAll({attributes: ['texto'], order: ['texto']})
+		
 	  })
+	.then(
+	 	function(topics){
+		res.render('quizes/index', {quizes: quizes, topics: topics, errors: []});
+	})
 	.catch(function(error) { next(error);})
 };
 
@@ -126,4 +135,41 @@ exports.destroy = function(req, res){
 	req.quiz.destroy().then( function() {
 		res.redirect('/quizes');
 	}).catch( function(error){ next(error)});
+};
+
+
+//GET /quizes/playAll
+exports.playAll = function(req, res){
+	let aciertos=+req.query.aciertos;
+	let msg=req.query.msg;
+	let ids=JSON.parse(decodeURI(req.query.quizesIds));
+	let quiz;
+	let id;
+	if (ids.length===0){ 
+		if(req.query.fallo) msg= req.query.msg;
+		else msg=`Perfecto, ha terminado la prueba, se acertaron ${aciertos}.`;
+		res.render('quizes/playAll', {quiz: quiz, msg:msg, aciertos:aciertos, quizesIds:ids,  errors: []});
+	}else{
+		if (aciertos===0){
+			ids = ids.sort(function() {return Math.random() - 0.5});
+		}
+		id=ids[0];
+		ids.splice(0,1);
+		console.log(JSON.stringify(ids));
+		models.Quiz.findByPk(Number(id), { include: [ { model: models.Comment }] })
+		.then( function(result){
+			quiz=result;
+			if(!req.query.fallo){
+				aciertos++;		
+			}
+			res.render('quizes/playAll', {quiz: quiz, msg:msg, aciertos:aciertos, quizesIds:ids,  errors: []});
+		})
+		.catch ((errors) => {
+			let errores=[];
+			let i=0; 
+			for (let prop in errors) errores[i++]={message: JSON.stringify(errors[prop])};
+			res.render('quizes', { errors: errores});
+		});
+	}
+	
 };
