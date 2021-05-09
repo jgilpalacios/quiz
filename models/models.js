@@ -30,6 +30,9 @@ let Sequelize = require('sequelize');
 //Usar BBDD SQLite o Postgres:
 let sequelize = new Sequelize(DB_name, user, pwd,
 		{ dialect:  protocol,
+          dialectOptions: {
+             ssl: true
+          },
 		  protocol: protocol,
 		  port:     port,
 		  host:     host,
